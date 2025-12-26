@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: Demo-AppChat
+  datasource:
+    url: jdbc:postgresql://localhost:5000/chat-app
+    username: admin
+    password: admin123
+
+logging:
+  level:
+    org:
+      hibernate:
+        tool:
+          hbm2ddl: DEBUG
+        SQL: DEBUG
+        orm:
+          connections: DEBUG
+    com.project: DEBUG
