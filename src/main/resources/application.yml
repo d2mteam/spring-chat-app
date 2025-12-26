@@ -2,17 +2,26 @@ spring:
   application:
     name: Demo-AppChat
   datasource:
-    url: jdbc:postgresql://localhost:5000/chat-app
+    url: jdbc:postgresql://localhost:5432/chat-app
     username: admin
     password: admin123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 logging:
   level:
     org:
       hibernate:
-        tool:
-          hbm2ddl: DEBUG
         SQL: DEBUG
         orm:
-          connections: DEBUG
+          jdbc:
+            bind: TRACE
     com.project: DEBUG

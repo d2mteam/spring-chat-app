@@ -1,0 +1,10 @@
+package com.project.chatservice.chat.repository;
+
+import com.project.chatservice.chat.domain.RoomMember;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RoomMemberRepository extends JpaRepository<RoomMember, Long> {
+
+    List<RoomMember> findByRoomId(Long roomId);
+}
