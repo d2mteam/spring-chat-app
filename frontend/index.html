@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spring Chat - Frontend Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app__header">
+      <div>
+        <p class="app__eyebrow">Spring Chat Service</p>
+        <h1>Frontend đơn giản (HTML + CSS)</h1>
+        <p class="app__subtitle">
+          Giao diện đọc phòng chat và danh sách tin nhắn từ backend (REST API).
+        </p>
+      </div>
+      <div class="app__status" id="status">Sẵn sàng</div>
+    </header>
+
+    <main class="app__main">
+      <section class="panel">
+        <div class="panel__header">
+          <h2>Phòng chat</h2>
+          <button id="refreshRooms" class="button button--ghost">Làm mới</button>
+        </div>
+        <form id="createRoomForm" class="stack">
+          <label class="field">
+            <span>Tạo phòng mới</span>
+            <input type="text" id="roomName" placeholder="Ví dụ: General" required />
+          </label>
+          <button type="submit" class="button">Tạo phòng</button>
+        </form>
+        <ul id="roomList" class="room-list"></ul>
+      </section>
+
+      <section class="panel panel--messages">
+        <div class="panel__header">
+          <div>
+            <h2 id="roomTitle">Chọn phòng để xem tin nhắn</h2>
+            <p class="panel__subtitle">API: <code>/api/rooms/{roomId}/messages</code></p>
+          </div>
+          <div class="panel__actions">
+            <button id="refreshMessages" class="button button--ghost" disabled>Làm mới</button>
+          </div>
+        </div>
+        <div class="note">
+          Backend gửi tin nhắn mới qua WebSocket (<code>/app/rooms/{roomId}/send</code>),
+          nên frontend này chỉ hiển thị danh sách tin nhắn hiện tại.
+        </div>
+        <ul id="messageList" class="message-list"></ul>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
