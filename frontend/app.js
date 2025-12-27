@@ -1,4 +1,5 @@
-const apiBase = "/api";
+const apiBase =
+  window.location.protocol === "file:" ? "http://localhost:8080/api" : "/api";
 
 const statusEl = document.getElementById("status");
 const roomListEl = document.getElementById("roomList");
