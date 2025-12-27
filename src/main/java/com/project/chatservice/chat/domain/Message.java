@@ -29,16 +29,54 @@ public class Message {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column
+    private Long parentId;
+
+    @Column(nullable = false)
+    private String contentType = "text";
+
+    @Column(columnDefinition = "TEXT")
+    private String attachmentUrl;
+
+    @Column
+    private String attachmentName;
+
+    @Column
+    private String attachmentMimeType;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
+
+    @Column
+    private Instant editedAt;
+
+    @Column
+    private Instant deletedAt;
+
+    @Column
+    private String deletedBy;
 
     protected Message() {
     }
 
-    public Message(ChatRoom room, String senderId, String content) {
+    public Message(ChatRoom room,
+                   String senderId,
+                   String content,
+                   Long parentId,
+                   String contentType,
+                   String attachmentUrl,
+                   String attachmentName,
+                   String attachmentMimeType) {
         this.room = room;
         this.senderId = senderId;
         this.content = content;
+        this.parentId = parentId;
+        if (contentType != null) {
+            this.contentType = contentType;
+        }
+        this.attachmentUrl = attachmentUrl;
+        this.attachmentName = attachmentName;
+        this.attachmentMimeType = attachmentMimeType;
     }
 
     public Long getId() {
@@ -57,7 +95,49 @@ public class Message {
         return content;
     }
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getAttachmentUrl() {
+        return attachmentUrl;
+    }
+
+    public String getAttachmentName() {
+        return attachmentName;
+    }
+
+    public String getAttachmentMimeType() {
+        return attachmentMimeType;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public Instant getEditedAt() {
+        return editedAt;
+    }
+
+    public Instant getDeletedAt() {
+        return deletedAt;
+    }
+
+    public String getDeletedBy() {
+        return deletedBy;
+    }
+
+    public void editContent(String newContent) {
+        this.content = newContent;
+        this.editedAt = Instant.now();
+    }
+
+    public void softDelete(String userId) {
+        this.deletedAt = Instant.now();
+        this.deletedBy = userId;
     }
 }

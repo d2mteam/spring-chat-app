@@ -1,6 +1,8 @@
 package com.project.chatservice.infrastructure.websocket;
 
 import com.project.chatservice.chat.service.ChatMessageEvent;
+import com.project.chatservice.chat.service.NotificationEvent;
+import com.project.chatservice.chat.service.ReceiptEvent;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +15,18 @@ public class WebSocketBroadcaster {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void broadcast(ChatMessageEvent event) {
+    public void broadcastMessage(ChatMessageEvent event) {
         String destination = "/topic/rooms/" + event.roomId();
+        messagingTemplate.convertAndSend(destination, event);
+    }
+
+    public void broadcastReceipt(ReceiptEvent event) {
+        String destination = "/topic/rooms/" + event.roomId() + "/receipts";
+        messagingTemplate.convertAndSend(destination, event);
+    }
+
+    public void broadcastNotification(NotificationEvent event) {
+        String destination = "/topic/users/" + event.userId() + "/notifications";
         messagingTemplate.convertAndSend(destination, event);
     }
 }

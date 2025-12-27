@@ -23,6 +23,15 @@ public class ChatWebSocketController {
     public ChatMessageEvent sendMessage(@DestinationVariable Long roomId,
                                         @Payload ChatMessageRequest request) {
         String senderId = currentUserProvider.getUserId();
-        return messageService.saveAndPublish(roomId, senderId, request.getContent());
+        return messageService.saveAndPublish(
+            roomId,
+            senderId,
+            request.getContent(),
+            request.getParentId(),
+            request.getContentType(),
+            request.getAttachmentUrl(),
+            request.getAttachmentName(),
+            request.getAttachmentMimeType()
+        );
     }
 }

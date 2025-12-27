@@ -10,4 +10,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByRoomIdOrderByCreatedAtAscIdAsc(Long roomId, Pageable pageable);
 
     List<Message> findByRoomIdAndIdGreaterThanOrderByCreatedAtAscIdAsc(Long roomId, Long afterId);
+
+    List<Message> findByRoomIdAndParentIdOrderByCreatedAtAscIdAsc(Long roomId, Long parentId);
 }
