@@ -21,11 +21,13 @@ public class WebSocketBroadcaster {
     }
 
     public void broadcastReceipt(ReceiptEvent event) {
+        // Task 1: broadcast read receipts theo room.
         String destination = "/topic/rooms/" + event.roomId() + "/receipts";
         messagingTemplate.convertAndSend(destination, event);
     }
 
     public void broadcastNotification(NotificationEvent event) {
+        // Task 8: broadcast notification riêng theo user.
         String destination = "/topic/users/" + event.userId() + "/notifications";
         messagingTemplate.convertAndSend(destination, event);
     }

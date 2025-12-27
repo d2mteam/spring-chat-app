@@ -15,6 +15,7 @@ import java.time.Instant;
 @Table(name = "message_receipts")
 public class MessageReceipt {
 
+    // Task 1: bảng lưu trạng thái đọc/đã nhận theo từng user.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

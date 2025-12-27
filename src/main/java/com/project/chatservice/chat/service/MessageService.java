@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MessageService {
 
+    // Task 8: regex tìm mention theo dạng @username.
     private static final Pattern MENTION_PATTERN = Pattern.compile("@([A-Za-z0-9_.-]+)");
 
     private final MessageRepository messageRepository;
@@ -52,6 +53,7 @@ public class MessageService {
                                            String attachmentUrl,
                                            String attachmentName,
                                            String attachmentMimeType) {
+        // Task 2 & 6: lưu message có thread và thông tin đính kèm.
         ChatRoom room = roomRepository.findById(roomId)
             .orElseThrow(() -> new IllegalArgumentException("Room not found"));
         Message message = messageRepository.save(new Message(
@@ -82,11 +84,13 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public List<Message> getThreadMessages(Long roomId, Long parentId) {
+        // Task 2: lấy message theo parentId để hiển thị thread.
         return messageRepository.findByRoomIdAndParentIdOrderByCreatedAtAscIdAsc(roomId, parentId);
     }
 
     @Transactional
     public Message editMessage(Long roomId, Long messageId, String editorId, String newContent) {
+        // Task 5: chỉnh sửa nội dung message và broadcast lại.
         Message message = getMessageInRoom(roomId, messageId);
         if (message.getDeletedAt() != null) {
             throw new IllegalStateException("Cannot edit deleted message");
@@ -99,6 +103,7 @@ public class MessageService {
 
     @Transactional
     public Message deleteMessage(Long roomId, Long messageId, String deleterId) {
+        // Task 5: xóa mềm message để giữ audit trail.
         Message message = getMessageInRoom(roomId, messageId);
         message.softDelete(deleterId);
         ChatMessageEvent event = toEvent(message);
@@ -108,6 +113,7 @@ public class MessageService {
 
     @Transactional
     public ReceiptEvent markRead(Long roomId, Long messageId, String userId) {
+        // Task 1: ghi lại trạng thái đã đọc theo user.
         Message message = getMessageInRoom(roomId, messageId);
         MessageReceipt receipt = messageReceiptRepository.findByMessageIdAndUserId(messageId, userId)
             .orElseGet(() -> new MessageReceipt(message, userId, "READ"));
@@ -146,6 +152,7 @@ public class MessageService {
     }
 
     private void publishMentions(Message message) {
+        // Task 8: phát hiện mention và gửi notification realtime.
         String content = message.getContent();
         if (content == null) {
             return;

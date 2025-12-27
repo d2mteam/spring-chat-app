@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisNotificationSubscriber implements MessageListener {
 
+    // Task 8: nhận notification từ Redis và broadcast tới user.
     private final ObjectMapper objectMapper;
     private final WebSocketBroadcaster broadcaster;
 

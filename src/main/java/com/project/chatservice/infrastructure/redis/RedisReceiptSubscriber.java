@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisReceiptSubscriber implements MessageListener {
 
+    // Task 1: nhận read receipt từ Redis và broadcast tới room.
     private final ObjectMapper objectMapper;
     private final WebSocketBroadcaster broadcaster;
 

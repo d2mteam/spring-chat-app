@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisNotificationPublisher {
 
+    // Task 8: kênh pub/sub cho notification mention.
     public static final String CHANNEL = "chat:notifications";
 
     private final RedisTemplate<String, String> redisTemplate;

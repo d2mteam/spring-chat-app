@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisReceiptPublisher {
 
+    // Task 1: kênh pub/sub cho read receipts.
     public static final String CHANNEL = "chat:receipts";
 
     private final RedisTemplate<String, String> redisTemplate;
