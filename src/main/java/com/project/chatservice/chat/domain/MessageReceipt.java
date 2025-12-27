@@ -10,9 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "message_receipts")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MessageReceipt {
 
     // Task 1: bảng lưu trạng thái đọc/đã nhận theo từng user.
@@ -33,33 +38,10 @@ public class MessageReceipt {
     @Column(nullable = false)
     private Instant updatedAt = Instant.now();
 
-    protected MessageReceipt() {
-    }
-
     public MessageReceipt(Message message, String userId, String status) {
         this.message = message;
         this.userId = userId;
         this.status = status;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
     }
 
     public void markStatus(String status) {

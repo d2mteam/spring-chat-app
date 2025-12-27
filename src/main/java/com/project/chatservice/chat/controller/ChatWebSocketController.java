@@ -3,6 +3,7 @@ package com.project.chatservice.chat.controller;
 import com.project.chatservice.chat.service.ChatMessageEvent;
 import com.project.chatservice.chat.service.MessageService;
 import com.project.chatservice.security.CurrentUserProvider;
+import jakarta.validation.Valid;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -21,7 +22,7 @@ public class ChatWebSocketController {
 
     @MessageMapping("/rooms/{roomId}/send")
     public ChatMessageEvent sendMessage(@DestinationVariable Long roomId,
-                                        @Payload ChatMessageRequest request) {
+                                        @Valid @Payload ChatMessageRequest request) {
         String senderId = currentUserProvider.getUserId();
         return messageService.saveAndPublish(
             roomId,

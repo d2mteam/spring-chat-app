@@ -4,6 +4,7 @@ import com.project.chatservice.chat.domain.ChatRoom;
 import com.project.chatservice.chat.domain.Message;
 import com.project.chatservice.chat.service.MessageService;
 import com.project.chatservice.chat.service.RoomService;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -23,10 +24,14 @@ public class ChatRestController {
 
     private final MessageService messageService;
     private final RoomService roomService;
+    private final ChatMessageMapper messageMapper;
 
-    public ChatRestController(MessageService messageService, RoomService roomService) {
+    public ChatRestController(MessageService messageService,
+                              RoomService roomService,
+                              ChatMessageMapper messageMapper) {
         this.messageService = messageService;
         this.roomService = roomService;
+        this.messageMapper = messageMapper;
     }
 
     @GetMapping("/api/rooms")
@@ -36,7 +41,7 @@ public class ChatRestController {
 
     @PostMapping("/api/rooms")
     @ResponseStatus(HttpStatus.CREATED)
-    public ChatRoom createRoom(@RequestBody ChatRoomRequest request) {
+    public ChatRoom createRoom(@Valid @RequestBody ChatRoomRequest request) {
         return roomService.createRoom(request.getName());
     }
 
@@ -48,7 +53,7 @@ public class ChatRestController {
             ? messageService.getRecentMessages(roomId, limit)
             : messageService.getMessagesAfter(roomId, afterId);
         return messages.stream()
-            .map(this::toResponse)
+            .map(messageMapper::toResponse)
             .collect(Collectors.toList());
     }
 
@@ -56,16 +61,16 @@ public class ChatRestController {
     public List<ChatMessageResponse> getThread(@PathVariable Long roomId,
                                                @PathVariable Long messageId) {
         return messageService.getThreadMessages(roomId, messageId).stream()
-            .map(this::toResponse)
+            .map(messageMapper::toResponse)
             .collect(Collectors.toList());
     }
 
     @PatchMapping("/api/rooms/{roomId}/messages/{messageId}")
     public ResponseEntity<ChatMessageResponse> editMessage(@PathVariable Long roomId,
                                                            @PathVariable Long messageId,
-                                                           @RequestBody ChatMessageEditRequest request) {
+                                                           @Valid @RequestBody ChatMessageEditRequest request) {
         Message message = messageService.editMessage(roomId, messageId, request.getEditorId(), request.getContent());
-        return ResponseEntity.ok(toResponse(message));
+        return ResponseEntity.ok(messageMapper.toResponse(message));
     }
 
     @DeleteMapping("/api/rooms/{roomId}/messages/{messageId}")
@@ -73,7 +78,7 @@ public class ChatRestController {
                                                              @PathVariable Long messageId,
                                                              @RequestParam String deleterId) {
         Message message = messageService.deleteMessage(roomId, messageId, deleterId);
-        return ResponseEntity.ok(toResponse(message));
+        return ResponseEntity.ok(messageMapper.toResponse(message));
     }
 
     @PostMapping("/api/rooms/{roomId}/messages/{messageId}/read")
@@ -84,21 +89,4 @@ public class ChatRestController {
         return ResponseEntity.accepted().build();
     }
 
-    private ChatMessageResponse toResponse(Message message) {
-        return new ChatMessageResponse(
-            message.getId(),
-            message.getRoom().getId(),
-            message.getSenderId(),
-            message.getContent(),
-            message.getParentId(),
-            message.getContentType(),
-            message.getAttachmentUrl(),
-            message.getAttachmentName(),
-            message.getAttachmentMimeType(),
-            message.getCreatedAt(),
-            message.getEditedAt(),
-            message.getDeletedAt(),
-            message.getDeletedBy()
-        );
-    }
 }

@@ -10,9 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "messages")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message {
 
     @Id
@@ -64,9 +69,6 @@ public class Message {
     // Task 5: userId thực hiện xóa mềm.
     private String deletedBy;
 
-    protected Message() {
-    }
-
     public Message(ChatRoom room,
                    String senderId,
                    String content,
@@ -85,58 +87,6 @@ public class Message {
         this.attachmentUrl = attachmentUrl;
         this.attachmentName = attachmentName;
         this.attachmentMimeType = attachmentMimeType;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public ChatRoom getRoom() {
-        return room;
-    }
-
-    public String getSenderId() {
-        return senderId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public String getAttachmentUrl() {
-        return attachmentUrl;
-    }
-
-    public String getAttachmentName() {
-        return attachmentName;
-    }
-
-    public String getAttachmentMimeType() {
-        return attachmentMimeType;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getEditedAt() {
-        return editedAt;
-    }
-
-    public Instant getDeletedAt() {
-        return deletedAt;
-    }
-
-    public String getDeletedBy() {
-        return deletedBy;
     }
 
     public void editContent(String newContent) {

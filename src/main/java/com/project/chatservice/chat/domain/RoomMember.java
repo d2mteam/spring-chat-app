@@ -10,9 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "room_members")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomMember {
 
     @Id
@@ -29,27 +34,8 @@ public class RoomMember {
     @Column(nullable = false, updatable = false)
     private Instant joinedAt = Instant.now();
 
-    protected RoomMember() {
-    }
-
     public RoomMember(ChatRoom room, String userId) {
         this.room = room;
         this.userId = userId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public ChatRoom getRoom() {
-        return room;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public Instant getJoinedAt() {
-        return joinedAt;
     }
 }
