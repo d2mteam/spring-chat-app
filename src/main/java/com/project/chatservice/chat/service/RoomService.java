@@ -3,17 +3,15 @@ package com.project.chatservice.chat.service;
 import com.project.chatservice.chat.domain.ChatRoom;
 import com.project.chatservice.chat.repository.RoomRepository;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class RoomService {
 
     private final RoomRepository roomRepository;
-
-    public RoomService(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
-    }
 
     @Transactional
     public ChatRoom createRoom(String name) {
