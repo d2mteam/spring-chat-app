@@ -3,10 +3,12 @@ package com.project.chatservice.infrastructure.redis;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.chatservice.chat.service.NotificationEvent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class RedisNotificationPublisher {
 
     // Task 8: kênh pub/sub cho notification mention.
@@ -14,11 +16,6 @@ public class RedisNotificationPublisher {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
-
-    public RedisNotificationPublisher(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
-        this.redisTemplate = redisTemplate;
-        this.objectMapper = objectMapper;
-    }
 
     public void publish(NotificationEvent event) {
         try {

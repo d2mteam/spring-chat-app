@@ -4,20 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.chatservice.chat.service.ChatMessageEvent;
 import com.project.chatservice.infrastructure.websocket.WebSocketBroadcaster;
 import java.nio.charset.StandardCharsets;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class RedisSubscriber implements MessageListener {
 
     private final ObjectMapper objectMapper;
     private final WebSocketBroadcaster broadcaster;
-
-    public RedisSubscriber(ObjectMapper objectMapper, WebSocketBroadcaster broadcaster) {
-        this.objectMapper = objectMapper;
-        this.broadcaster = broadcaster;
-    }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {

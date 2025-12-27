@@ -2,19 +2,17 @@ package com.project.chatservice.chat.service;
 
 import java.time.Duration;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PresenceService {
 
     private static final Duration PRESENCE_TTL = Duration.ofMinutes(30);
 
     private final RedisTemplate<String, String> redisTemplate;
-
-    public PresenceService(RedisTemplate<String, String> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     public void markOnline(Long roomId, String userId) {
         String key = presenceKey(roomId);

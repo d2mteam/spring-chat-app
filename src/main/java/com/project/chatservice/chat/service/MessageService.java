@@ -13,11 +13,13 @@ import java.time.Instant;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class MessageService {
 
     // Task 8: regex tìm mention theo dạng @username.
@@ -29,20 +31,6 @@ public class MessageService {
     private final RedisPublisher redisPublisher;
     private final RedisReceiptPublisher receiptPublisher;
     private final RedisNotificationPublisher notificationPublisher;
-
-    public MessageService(MessageRepository messageRepository,
-                          MessageReceiptRepository messageReceiptRepository,
-                          RoomRepository roomRepository,
-                          RedisPublisher redisPublisher,
-                          RedisReceiptPublisher receiptPublisher,
-                          RedisNotificationPublisher notificationPublisher) {
-        this.messageRepository = messageRepository;
-        this.messageReceiptRepository = messageReceiptRepository;
-        this.roomRepository = roomRepository;
-        this.redisPublisher = redisPublisher;
-        this.receiptPublisher = receiptPublisher;
-        this.notificationPublisher = notificationPublisher;
-    }
 
     @Transactional
     public ChatMessageEvent saveAndPublish(Long roomId,

@@ -19,6 +19,32 @@ const setStatus = (message, isError = false) => {
   statusEl.style.color = isError ? "#991b1b" : "#0f172a";
 };
 
+const getErrorMessage = async (response, fallbackMessage) => {
+  if (!response) {
+    return fallbackMessage;
+  }
+
+  try {
+    const data = await response.clone().json();
+    if (data?.message) {
+      return data.message;
+    }
+  } catch (error) {
+    // Ignore JSON parsing errors.
+  }
+
+  try {
+    const text = await response.text();
+    if (text) {
+      return text;
+    }
+  } catch (error) {
+    // Ignore text parsing errors.
+  }
+
+  return fallbackMessage;
+};
+
 const formatDate = (value) => {
   if (!value) return "";
   const date = new Date(value);
@@ -79,7 +105,8 @@ const loadRooms = async () => {
   try {
     const response = await fetch(`${apiBase}/rooms`);
     if (!response.ok) {
-      throw new Error("Không thể tải danh sách phòng.");
+      const message = await getErrorMessage(response, "Không thể tải danh sách phòng.");
+      throw new Error(message);
     }
     rooms = await response.json();
     renderRooms();
@@ -97,7 +124,8 @@ const loadMessages = async (room) => {
   try {
     const response = await fetch(`${apiBase}/rooms/${room.id}/messages?limit=50`);
     if (!response.ok) {
-      throw new Error("Không thể tải tin nhắn.");
+      const message = await getErrorMessage(response, "Không thể tải tin nhắn.");
+      throw new Error(message);
     }
     const messages = await response.json();
     renderMessages(messages);
@@ -123,7 +151,8 @@ createRoomForm.addEventListener("submit", async (event) => {
     });
 
     if (!response.ok) {
-      throw new Error("Không thể tạo phòng.");
+      const message = await getErrorMessage(response, "Không thể tạo phòng.");
+      throw new Error(message);
     }
 
     roomNameInput.value = "";
