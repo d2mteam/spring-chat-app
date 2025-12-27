@@ -28,6 +28,7 @@ public class ChatRoom {
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
+    @Builder
     public ChatRoom(String name) {
         this.name = name;
     }
