@@ -17,7 +17,9 @@ public class RoomService {
 
     @Transactional
     public ChatRoom createRoom(String name) {
-        return roomRepository.save(new ChatRoom(name));
+        return roomRepository.save(ChatRoom.builder()
+                .name(name)
+                .build());
     }
 
     @Transactional(readOnly = true)
