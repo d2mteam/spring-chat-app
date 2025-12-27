@@ -1,4 +1,15 @@
-const apiBase = "/api";
+const apiConfigForm = document.getElementById("apiConfigForm");
+const apiBaseInput = document.getElementById("apiBaseUrl");
+
+const defaultApiBase = () => {
+  if (window.location.protocol === "file:" || window.location.port === "8000") {
+    return "http://localhost:8080/api";
+  }
+  return `${window.location.origin}/api`;
+};
+
+let apiBase = localStorage.getItem("apiBase") ?? defaultApiBase();
+apiBaseInput.value = apiBase;
 
 const statusEl = document.getElementById("status");
 const roomListEl = document.getElementById("roomList");
@@ -137,6 +148,16 @@ createRoomForm.addEventListener("submit", async (event) => {
   } catch (error) {
     setStatus(error.message, true);
   }
+});
+
+apiConfigForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const nextBase = apiBaseInput.value.trim().replace(/\/+$/, "");
+  if (!nextBase) return;
+  apiBase = nextBase;
+  localStorage.setItem("apiBase", apiBase);
+  setStatus("Đã cập nhật địa chỉ backend.");
+  loadRooms();
 });
 
 refreshRoomsBtn.addEventListener("click", () => {

@@ -25,6 +25,13 @@
           <h2>Phòng chat</h2>
           <button id="refreshRooms" class="button button--ghost">Làm mới</button>
         </div>
+        <form id="apiConfigForm" class="stack">
+          <label class="field">
+            <span>Địa chỉ backend</span>
+            <input type="url" id="apiBaseUrl" placeholder="http://localhost:8080/api" required />
+          </label>
+          <button type="submit" class="button button--ghost">Kết nối</button>
+        </form>
         <form id="createRoomForm" class="stack">
           <label class="field">
             <span>Tạo phòng mới</span>

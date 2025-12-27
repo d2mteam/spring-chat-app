@@ -13,6 +13,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/ws/**").permitAll()
                 .anyRequest().permitAll()
