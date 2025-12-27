@@ -7,6 +7,7 @@ import com.project.chatservice.chat.service.RoomService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,19 +21,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class ChatRestController {
 
     private final MessageService messageService;
     private final RoomService roomService;
     private final ChatMessageMapper messageMapper;
-
-    public ChatRestController(MessageService messageService,
-                              RoomService roomService,
-                              ChatMessageMapper messageMapper) {
-        this.messageService = messageService;
-        this.roomService = roomService;
-        this.messageMapper = messageMapper;
-    }
 
     @GetMapping("/api/rooms")
     public List<ChatRoom> listRooms() {

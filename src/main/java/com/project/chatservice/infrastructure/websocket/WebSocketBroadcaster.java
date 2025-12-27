@@ -3,17 +3,15 @@ package com.project.chatservice.infrastructure.websocket;
 import com.project.chatservice.chat.service.ChatMessageEvent;
 import com.project.chatservice.chat.service.NotificationEvent;
 import com.project.chatservice.chat.service.ReceiptEvent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class WebSocketBroadcaster {
 
     private final SimpMessagingTemplate messagingTemplate;
-
-    public WebSocketBroadcaster(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
-    }
 
     public void broadcastMessage(ChatMessageEvent event) {
         String destination = "/topic/rooms/" + event.roomId();
