@@ -3,30 +3,36 @@ package com.project.chatservice.infrastructure.websocket;
 import com.project.chatservice.chat.service.ChatMessageEvent;
 import com.project.chatservice.chat.service.NotificationEvent;
 import com.project.chatservice.chat.service.ReceiptEvent;
+import com.project.chatservice.infrastructure.websocket.model.ServerMessageEnvelope;
+import com.project.chatservice.infrastructure.websocket.model.ServerMessageType;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class WebSocketBroadcaster {
 
-    private final SimpMessagingTemplate messagingTemplate;
+    private final WebSocketMessageSender messageSender;
+    private final WebSocketDestinationResolver destinationResolver;
 
     public void broadcastMessage(ChatMessageEvent event) {
-        String destination = "/topic/rooms/" + event.roomId();
-        messagingTemplate.convertAndSend(destination, event);
+        String destination = destinationResolver.roomMessages(event.roomId());
+        messageSender.send(destination, buildEnvelope(ServerMessageType.MESSAGE, destination, event));
     }
 
     public void broadcastReceipt(ReceiptEvent event) {
-        // Task 1: broadcast read receipts theo room.
-        String destination = "/topic/rooms/" + event.roomId() + "/receipts";
-        messagingTemplate.convertAndSend(destination, event);
+        String destination = destinationResolver.roomReceipts(event.roomId());
+        messageSender.send(destination, buildEnvelope(ServerMessageType.RECEIPT, destination, event));
     }
 
     public void broadcastNotification(NotificationEvent event) {
-        // Task 8: broadcast notification riêng theo user.
-        String destination = "/topic/users/" + event.userId() + "/notifications";
-        messagingTemplate.convertAndSend(destination, event);
+        String destination = destinationResolver.userNotifications(event.userId());
+        messageSender.send(destination, buildEnvelope(ServerMessageType.NOTIFICATION, destination, event));
+    }
+
+    private ServerMessageEnvelope buildEnvelope(ServerMessageType type, String destination, Object payload) {
+        return new ServerMessageEnvelope(UUID.randomUUID().toString(), type, destination, payload, Instant.now());
     }
 }

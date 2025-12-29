@@ -3,36 +3,32 @@ package com.project.chatservice.config;
 import com.project.chatservice.security.JwtHandshakeInterceptor;
 import com.project.chatservice.security.UserHandshakeHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketConfig implements WebSocketConfigurer {
 
     private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
     private final UserHandshakeHandler userHandshakeHandler;
+    private final WebSocketProperties webSocketProperties;
+    private final org.springframework.web.socket.WebSocketHandler webSocketHandler;
 
     public WebSocketConfig(JwtHandshakeInterceptor jwtHandshakeInterceptor,
-                           UserHandshakeHandler userHandshakeHandler) {
+                           UserHandshakeHandler userHandshakeHandler,
+                           WebSocketProperties webSocketProperties,
+                           org.springframework.web.socket.WebSocketHandler webSocketHandler) {
         this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
         this.userHandshakeHandler = userHandshakeHandler;
+        this.webSocketProperties = webSocketProperties;
+        this.webSocketHandler = webSocketHandler;
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(webSocketHandler, webSocketProperties.endpoint())
             .setHandshakeHandler(userHandshakeHandler)
             .addInterceptors(jwtHandshakeInterceptor)
-            .setAllowedOriginPatterns("*")
-            .withSockJS();
-    }
-
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic");
+            .setAllowedOriginPatterns(webSocketProperties.allowedOrigins().toArray(String[]::new));
     }
 }
