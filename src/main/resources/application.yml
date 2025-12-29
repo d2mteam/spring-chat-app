@@ -25,3 +25,24 @@ logging:
           jdbc:
             bind: TRACE
     com.project: DEBUG
+
+chat:
+  websocket:
+    endpoint: /ws
+    allowed-origins:
+      - "*"
+    anonymous-user-id: anonymous
+    guest-user-prefix: guest-
+    destinations:
+      rooms: rooms
+      receipts-suffix: receipts
+      users: users
+      notifications-suffix: notifications
+    ack:
+      key-prefix: chat:ws:ack:
+      ttl: 5m
+  redis:
+    channels:
+      messages: chat:messages
+      receipts: chat:receipts
+      notifications: chat:notifications

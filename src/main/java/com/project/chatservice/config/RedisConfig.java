@@ -1,10 +1,7 @@
 package com.project.chatservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.chatservice.infrastructure.redis.RedisNotificationPublisher;
 import com.project.chatservice.infrastructure.redis.RedisNotificationSubscriber;
-import com.project.chatservice.infrastructure.redis.RedisPublisher;
-import com.project.chatservice.infrastructure.redis.RedisReceiptPublisher;
 import com.project.chatservice.infrastructure.redis.RedisReceiptSubscriber;
 import com.project.chatservice.infrastructure.redis.RedisSubscriber;
 import org.springframework.context.annotation.Bean;
@@ -35,14 +32,15 @@ public class RedisConfig {
 
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
+                                                                       RedisChannelsProperties channelsProperties,
                                                                        RedisSubscriber subscriber,
                                                                        RedisReceiptSubscriber receiptSubscriber,
                                                                        RedisNotificationSubscriber notificationSubscriber) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(subscriber, new PatternTopic(RedisPublisher.CHANNEL));
-        container.addMessageListener(receiptSubscriber, new PatternTopic(RedisReceiptPublisher.CHANNEL));
-        container.addMessageListener(notificationSubscriber, new PatternTopic(RedisNotificationPublisher.CHANNEL));
+        container.addMessageListener(subscriber, new PatternTopic(channelsProperties.messages()));
+        container.addMessageListener(receiptSubscriber, new PatternTopic(channelsProperties.receipts()));
+        container.addMessageListener(notificationSubscriber, new PatternTopic(channelsProperties.notifications()));
         return container;
     }
 }
