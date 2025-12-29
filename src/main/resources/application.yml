@@ -39,7 +39,7 @@ chat:
       users: users
       notifications-suffix: notifications
     ack:
-      key-prefix: chat:ws:ack:
+      key-prefix: 'chat:ws:ack:'
       ttl: 5m
   redis:
     channels:
