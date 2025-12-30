@@ -142,6 +142,19 @@ body {
   gap: 10px;
 }
 
+.message-list--slider {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+}
+
+.message-list--slider li {
+  flex: 0 0 min(320px, 80vw);
+  scroll-snap-align: start;
+}
+
 .room-list li {
   padding: 12px 14px;
   border-radius: 12px;
