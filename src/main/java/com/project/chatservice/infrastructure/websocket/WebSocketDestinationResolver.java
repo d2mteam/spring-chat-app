@@ -3,6 +3,9 @@ package com.project.chatservice.infrastructure.websocket;
 import com.project.chatservice.config.WebSocketProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * Represents the web socket destination resolver.
+ */
 @Component
 public class WebSocketDestinationResolver {
 

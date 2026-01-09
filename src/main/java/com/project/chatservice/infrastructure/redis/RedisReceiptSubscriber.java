@@ -9,6 +9,9 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
+/**
+ * Represents the redis receipt subscriber.
+ */
 @Component
 @RequiredArgsConstructor
 public class RedisReceiptSubscriber implements MessageListener {

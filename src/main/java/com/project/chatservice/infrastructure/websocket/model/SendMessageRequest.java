@@ -3,6 +3,9 @@ package com.project.chatservice.infrastructure.websocket.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Represents the send message request.
+ */
 public class SendMessageRequest {
 
     @NotNull

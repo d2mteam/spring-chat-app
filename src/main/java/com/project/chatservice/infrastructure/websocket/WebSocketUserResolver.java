@@ -6,6 +6,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the web socket user resolver.
+ */
 @Component
 public class WebSocketUserResolver {
 

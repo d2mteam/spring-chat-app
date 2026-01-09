@@ -12,6 +12,9 @@ import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+/**
+ * Represents the redis config.
+ */
 @Configuration
 public class RedisConfig {
 

@@ -16,6 +16,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+/**
+ * Represents the chat web socket handler.
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j

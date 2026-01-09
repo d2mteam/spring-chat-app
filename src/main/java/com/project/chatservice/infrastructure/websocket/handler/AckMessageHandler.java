@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the ack message handler.
+ */
 @Component
 @RequiredArgsConstructor
 public class AckMessageHandler implements ClientMessageHandler {

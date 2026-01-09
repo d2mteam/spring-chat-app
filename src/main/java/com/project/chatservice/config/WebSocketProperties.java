@@ -4,6 +4,9 @@ import java.time.Duration;
 import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * Represents the web socket properties.
+ */
 @ConfigurationProperties(prefix = "chat.websocket")
 public record WebSocketProperties(
     String endpoint,

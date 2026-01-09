@@ -10,6 +10,9 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Represents the web socket broadcaster.
+ */
 @Component
 @RequiredArgsConstructor
 public class WebSocketBroadcaster {

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the default web socket message sender.
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j

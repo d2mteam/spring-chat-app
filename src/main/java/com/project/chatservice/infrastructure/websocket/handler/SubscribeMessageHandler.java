@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the subscribe message handler.
+ */
 @Component
 @RequiredArgsConstructor
 public class SubscribeMessageHandler implements ClientMessageHandler {

@@ -4,6 +4,9 @@ import java.util.Optional;
 import java.util.Set;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the session registry.
+ */
 public interface SessionRegistry {
 
     void register(WebSocketSession session, String userId);

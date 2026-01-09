@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the send chat message handler.
+ */
 @Component
 @RequiredArgsConstructor
 public class SendChatMessageHandler implements ClientMessageHandler {
