@@ -18,6 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Represents the message service.
+ */
 @Service
 @RequiredArgsConstructor
 public class MessageService {

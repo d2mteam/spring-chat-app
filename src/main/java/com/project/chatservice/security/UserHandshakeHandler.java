@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
+/**
+ * Represents the user handshake handler.
+ */
 @Component
 public class UserHandshakeHandler extends DefaultHandshakeHandler {
 

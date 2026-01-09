@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
+/**
+ * Represents the web socket payload validator.
+ */
 @Component
 public class WebSocketPayloadValidator {
 

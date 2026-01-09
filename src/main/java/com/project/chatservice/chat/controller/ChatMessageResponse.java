@@ -4,6 +4,9 @@ import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * Represents the chat message response.
+ */
 @Getter
 @AllArgsConstructor
 public class ChatMessageResponse {

@@ -7,6 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the in memory session registry.
+ */
 @Component
 public class InMemorySessionRegistry implements SessionRegistry {
 

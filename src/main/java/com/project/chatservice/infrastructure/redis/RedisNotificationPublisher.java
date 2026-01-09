@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * Represents the redis notification publisher.
+ */
 @Component
 @RequiredArgsConstructor
 public class RedisNotificationPublisher {

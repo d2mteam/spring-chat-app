@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Represents the chat message edit request.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

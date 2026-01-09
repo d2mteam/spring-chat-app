@@ -10,6 +10,9 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the web socket message router.
+ */
 @Component
 public class WebSocketMessageRouter {
 
