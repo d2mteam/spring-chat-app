@@ -12,6 +12,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents the chat room.
+ */
 @Entity
 @Table(name = "chat_rooms")
 @Getter

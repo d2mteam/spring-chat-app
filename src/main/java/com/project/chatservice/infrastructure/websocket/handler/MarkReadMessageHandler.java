@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Represents the mark read message handler.
+ */
 @Component
 @RequiredArgsConstructor
 public class MarkReadMessageHandler implements ClientMessageHandler {

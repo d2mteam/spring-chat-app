@@ -14,6 +14,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents the room member.
+ */
 @Entity
 @Table(name = "room_members")
 @Getter

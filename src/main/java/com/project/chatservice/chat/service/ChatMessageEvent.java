@@ -2,6 +2,9 @@ package com.project.chatservice.chat.service;
 
 import java.time.Instant;
 
+/**
+ * Represents the chat message event.
+ */
 public record ChatMessageEvent(Long roomId,
                                Long messageId,
                                String senderId,

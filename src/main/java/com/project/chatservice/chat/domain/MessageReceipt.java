@@ -14,6 +14,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents the message receipt.
+ */
 @Entity
 @Table(name = "message_receipts")
 @Getter

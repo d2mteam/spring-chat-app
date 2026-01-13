@@ -4,6 +4,9 @@ import com.project.chatservice.chat.domain.Message;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Represents the chat message mapper.
+ */
 @Mapper(componentModel = "spring")
 public interface ChatMessageMapper {
 

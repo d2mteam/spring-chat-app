@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Represents the chat room request.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

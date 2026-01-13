@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+/**
+ * Represents the jwt handshake interceptor.
+ */
 @Component
 public class JwtHandshakeInterceptor implements HandshakeInterceptor {
 

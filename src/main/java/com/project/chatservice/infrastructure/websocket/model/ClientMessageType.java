@@ -1,5 +1,8 @@
 package com.project.chatservice.infrastructure.websocket.model;
 
+/**
+ * Represents the client message type.
+ */
 public enum ClientMessageType {
     SUBSCRIBE,
     UNSUBSCRIBE,
