@@ -7,11 +7,13 @@ const roomTitleEl = document.getElementById("roomTitle");
 const messageListEl = document.getElementById("messageList");
 const refreshRoomsBtn = document.getElementById("refreshRooms");
 const refreshMessagesBtn = document.getElementById("refreshMessages");
+const toggleSliderBtn = document.getElementById("toggleSlider");
 const createRoomForm = document.getElementById("createRoomForm");
 const roomNameInput = document.getElementById("roomName");
 
 let currentRoomId = null;
 let rooms = [];
+let isSliderMode = false;
 
 const setStatus = (message, isError = false) => {
   statusEl.textContent = message;
@@ -79,6 +81,7 @@ const renderRooms = () => {
 
 const renderMessages = (messages) => {
   messageListEl.innerHTML = "";
+  messageListEl.classList.toggle("message-list--slider", isSliderMode);
   if (messages.length === 0) {
     messageListEl.innerHTML = "<li>Phòng này chưa có tin nhắn.</li>";
     return;
@@ -176,6 +179,12 @@ refreshRoomsBtn.addEventListener("click", () => {
 refreshMessagesBtn.addEventListener("click", () => {
   const room = rooms.find((item) => item.id === currentRoomId);
   loadMessages(room);
+});
+
+toggleSliderBtn.addEventListener("click", () => {
+  isSliderMode = !isSliderMode;
+  toggleSliderBtn.textContent = isSliderMode ? "Tắt trượt" : "Chế độ trượt";
+  messageListEl.classList.toggle("message-list--slider", isSliderMode);
 });
 
 loadRooms();
