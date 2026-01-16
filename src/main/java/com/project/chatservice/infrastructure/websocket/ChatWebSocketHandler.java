@@ -1,13 +1,5 @@
 package com.project.chatservice.infrastructure.websocket;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.chatservice.infrastructure.websocket.model.ClientMessageEnvelope;
-import com.project.chatservice.infrastructure.websocket.model.ServerMessageEnvelope;
-import com.project.chatservice.infrastructure.websocket.model.ServerMessageType;
-import com.project.chatservice.infrastructure.websocket.model.WebSocketErrorResponse;
-import java.io.IOException;
-import java.time.Instant;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,7 +16,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Slf4j
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
-    private final ObjectMapper objectMapper;
     private final WebSocketMessageRouter messageRouter;
     private final SessionRegistry sessionRegistry;
     private final WebSocketUserResolver userResolver;
@@ -32,17 +23,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         String userId = userResolver.resolveUserId(session);
-        sessionRegistry.register(session, userId);
+        sessionRegistry.register(new WebSocketSessionConnection(session), userId);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
-        try {
-            ClientMessageEnvelope envelope = objectMapper.readValue(message.getPayload(), ClientMessageEnvelope.class);
-            messageRouter.route(session, envelope);
-        } catch (Exception ex) {
-            sendError(session, "INVALID_MESSAGE", ex.getMessage());
-        }
+        messageRouter.route(session.getId(), message.getPayload());
     }
 
     @Override
@@ -50,22 +36,4 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessionRegistry.remove(session.getId());
     }
 
-    private void sendError(WebSocketSession session, String code, String message) {
-        WebSocketErrorResponse payload = new WebSocketErrorResponse(code, message, Instant.now());
-        ServerMessageEnvelope envelope = new ServerMessageEnvelope(
-            1,
-            ServerMessageType.ERROR,
-            UUID.randomUUID().toString(),
-            Instant.now().toEpochMilli(),
-            payload
-        );
-        try {
-            Object sendLock = sessionRegistry.getSendLock(session.getId()).orElse(session);
-            synchronized (sendLock) {
-                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(envelope)));
-            }
-        } catch (IOException ignored) {
-            log.warn("Failed to send websocket error response to session {}", session.getId(), ignored);
-        }
-    }
 }

@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 /**
  * Represents the in memory session registry.
@@ -13,25 +12,22 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class InMemorySessionRegistry implements SessionRegistry {
 
-    private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, SessionConnection> sessions = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> userIds = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> destinationSubscriptions = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> sessionSubscriptions = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, Object> sendLocks = new ConcurrentHashMap<>();
 
     @Override
-    public void register(WebSocketSession session, String userId) {
-        sessions.put(session.getId(), session);
-        userIds.put(session.getId(), userId);
-        sessionSubscriptions.putIfAbsent(session.getId(), ConcurrentHashMap.newKeySet());
-        sendLocks.putIfAbsent(session.getId(), new Object());
+    public void register(SessionConnection connection, String userId) {
+        sessions.put(connection.id(), connection);
+        userIds.put(connection.id(), userId);
+        sessionSubscriptions.putIfAbsent(connection.id(), ConcurrentHashMap.newKeySet());
     }
 
     @Override
     public void remove(String sessionId) {
         sessions.remove(sessionId);
         userIds.remove(sessionId);
-        sendLocks.remove(sessionId);
         Set<String> destinations = sessionSubscriptions.remove(sessionId);
         if (destinations != null) {
             destinations.forEach(destination -> {
@@ -47,7 +43,7 @@ public class InMemorySessionRegistry implements SessionRegistry {
     }
 
     @Override
-    public Optional<WebSocketSession> getSession(String sessionId) {
+    public Optional<SessionConnection> getSession(String sessionId) {
         return Optional.ofNullable(sessions.get(sessionId));
     }
 
@@ -80,20 +76,15 @@ public class InMemorySessionRegistry implements SessionRegistry {
     }
 
     @Override
-    public Set<WebSocketSession> getSubscribers(String destination) {
+    public Set<SessionConnection> getSubscribers(String destination) {
         Set<String> sessionIds = destinationSubscriptions.getOrDefault(destination, Collections.emptySet());
-        Set<WebSocketSession> result = ConcurrentHashMap.newKeySet();
+        Set<SessionConnection> result = ConcurrentHashMap.newKeySet();
         sessionIds.forEach(id -> {
-            WebSocketSession session = sessions.get(id);
-            if (session != null && session.isOpen()) {
-                result.add(session);
+            SessionConnection connection = sessions.get(id);
+            if (connection != null && connection.isOpen()) {
+                result.add(connection);
             }
         });
         return result;
-    }
-
-    @Override
-    public Optional<Object> getSendLock(String sessionId) {
-        return Optional.ofNullable(sendLocks.get(sessionId));
     }
 }

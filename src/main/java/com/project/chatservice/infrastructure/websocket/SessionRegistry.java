@@ -2,18 +2,17 @@ package com.project.chatservice.infrastructure.websocket;
 
 import java.util.Optional;
 import java.util.Set;
-import org.springframework.web.socket.WebSocketSession;
 
 /**
  * Represents the session registry.
  */
 public interface SessionRegistry {
 
-    void register(WebSocketSession session, String userId);
+    void register(SessionConnection connection, String userId);
 
     void remove(String sessionId);
 
-    Optional<WebSocketSession> getSession(String sessionId);
+    Optional<SessionConnection> getSession(String sessionId);
 
     Optional<String> getUserId(String sessionId);
 
@@ -21,7 +20,5 @@ public interface SessionRegistry {
 
     void unsubscribe(String sessionId, String destination);
 
-    Set<WebSocketSession> getSubscribers(String destination);
-
-    Optional<Object> getSendLock(String sessionId);
+    Set<SessionConnection> getSubscribers(String destination);
 }

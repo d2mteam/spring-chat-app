@@ -8,4 +8,6 @@ import com.project.chatservice.infrastructure.websocket.model.ServerMessageEnvel
 public interface WebSocketMessageSender {
 
     void send(String destination, ServerMessageEnvelope message);
+
+    void sendToSession(String sessionId, ServerMessageEnvelope message);
 }

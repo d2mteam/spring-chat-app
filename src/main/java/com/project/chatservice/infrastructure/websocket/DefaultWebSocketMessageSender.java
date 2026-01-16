@@ -4,17 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.chatservice.infrastructure.websocket.model.ServerMessageEnvelope;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
 /**
  * Represents the default web socket message sender.
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class DefaultWebSocketMessageSender implements WebSocketMessageSender {
 
     private final ObjectMapper objectMapper;
@@ -28,16 +24,19 @@ public class DefaultWebSocketMessageSender implements WebSocketMessageSender {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to serialize websocket message", e);
         }
-        TextMessage textMessage = new TextMessage(payload);
-        for (WebSocketSession session : sessionRegistry.getSubscribers(destination)) {
-            Object sendLock = sessionRegistry.getSendLock(session.getId()).orElse(session);
-            synchronized (sendLock) {
-                try {
-                    session.sendMessage(textMessage);
-                } catch (IOException e) {
-                    log.warn("Failed to send websocket message to session {}", session.getId(), e);
-                }
-            }
+        for (SessionConnection connection : sessionRegistry.getSubscribers(destination)) {
+            connection.send(payload);
         }
+    }
+
+    @Override
+    public void sendToSession(String sessionId, ServerMessageEnvelope message) {
+        String payload;
+        try {
+            payload = objectMapper.writeValueAsString(message);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to serialize websocket message", e);
+        }
+        sessionRegistry.getSession(sessionId).ifPresent(connection -> connection.send(payload));
     }
 }
