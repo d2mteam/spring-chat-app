@@ -1,8 +1,10 @@
-package com.project.chatservice.auth.session;
+package com.project.chatservice.auth.infrastructure.session;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.chatservice.auth.application.port.AuthSessionStore;
 import com.project.chatservice.auth.config.AuthProperties;
+import com.project.chatservice.auth.domain.AuthSession;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;

@@ -1,9 +1,9 @@
 package com.project.chatservice.auth.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.chatservice.auth.session.AuthSessionStore;
-import com.project.chatservice.auth.session.InMemoryAuthSessionStore;
-import com.project.chatservice.auth.session.RedisAuthSessionStore;
+import com.project.chatservice.auth.application.port.AuthSessionStore;
+import com.project.chatservice.auth.infrastructure.session.InMemoryAuthSessionStore;
+import com.project.chatservice.auth.infrastructure.session.RedisAuthSessionStore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

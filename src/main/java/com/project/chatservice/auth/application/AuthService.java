@@ -1,14 +1,14 @@
-package com.project.chatservice.auth.service;
+package com.project.chatservice.auth.application;
 
 import com.project.chatservice.auth.config.AuthProperties;
-import com.project.chatservice.auth.jwt.JwtService;
-import com.project.chatservice.auth.model.ChatUser;
-import com.project.chatservice.auth.repository.ChatUserRepository;
-import com.project.chatservice.auth.session.AuthSession;
-import com.project.chatservice.auth.session.AuthSessionStore;
-import com.project.chatservice.auth.web.dto.AuthResponse;
-import com.project.chatservice.auth.web.dto.LoginRequest;
-import com.project.chatservice.auth.web.dto.RegisterRequest;
+import com.project.chatservice.auth.domain.AuthSession;
+import com.project.chatservice.auth.domain.ChatUser;
+import com.project.chatservice.auth.infrastructure.jwt.JwtService;
+import com.project.chatservice.auth.infrastructure.persistence.ChatUserRepository;
+import com.project.chatservice.auth.application.port.AuthSessionStore;
+import com.project.chatservice.auth.interfaces.web.dto.AuthResponse;
+import com.project.chatservice.auth.interfaces.web.dto.LoginRequest;
+import com.project.chatservice.auth.interfaces.web.dto.RegisterRequest;
 import java.time.Instant;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,7 @@
-package com.project.chatservice.auth.session;
+package com.project.chatservice.auth.infrastructure.session;
 
+import com.project.chatservice.auth.application.port.AuthSessionStore;
+import com.project.chatservice.auth.domain.AuthSession;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

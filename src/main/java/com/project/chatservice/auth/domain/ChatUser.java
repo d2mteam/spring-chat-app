@@ -1,4 +1,4 @@
-package com.project.chatservice.auth.model;
+package com.project.chatservice.auth.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

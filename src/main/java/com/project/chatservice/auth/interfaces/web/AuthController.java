@@ -1,9 +1,9 @@
-package com.project.chatservice.auth.web;
+package com.project.chatservice.auth.interfaces.web;
 
-import com.project.chatservice.auth.service.AuthService;
-import com.project.chatservice.auth.web.dto.AuthResponse;
-import com.project.chatservice.auth.web.dto.LoginRequest;
-import com.project.chatservice.auth.web.dto.RegisterRequest;
+import com.project.chatservice.auth.application.AuthService;
+import com.project.chatservice.auth.interfaces.web.dto.AuthResponse;
+import com.project.chatservice.auth.interfaces.web.dto.LoginRequest;
+import com.project.chatservice.auth.interfaces.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

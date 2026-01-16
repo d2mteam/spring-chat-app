@@ -1,9 +1,9 @@
 package com.project.chatservice.config;
 
 import com.project.chatservice.auth.config.AuthProperties;
-import com.project.chatservice.auth.jwt.JwtAuthenticationFilter;
-import com.project.chatservice.auth.jwt.JwtService;
-import com.project.chatservice.auth.session.AuthSessionStore;
+import com.project.chatservice.auth.application.port.AuthSessionStore;
+import com.project.chatservice.auth.infrastructure.jwt.JwtAuthenticationFilter;
+import com.project.chatservice.auth.infrastructure.jwt.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;

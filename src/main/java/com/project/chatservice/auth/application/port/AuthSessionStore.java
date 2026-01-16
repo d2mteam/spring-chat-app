@@ -1,4 +1,4 @@
-package com.project.chatservice.auth.session;
+package com.project.chatservice.auth.application.port;
 
 /**
  * Represents an auth session store.

@@ -1,7 +1,7 @@
-package com.project.chatservice.auth.jwt;
+package com.project.chatservice.auth.infrastructure.jwt;
 
 import com.project.chatservice.auth.config.AuthProperties;
-import com.project.chatservice.auth.session.AuthSession;
+import com.project.chatservice.auth.domain.AuthSession;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

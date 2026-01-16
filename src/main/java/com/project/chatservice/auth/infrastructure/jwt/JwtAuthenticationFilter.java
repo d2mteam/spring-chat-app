@@ -1,6 +1,6 @@
-package com.project.chatservice.auth.jwt;
+package com.project.chatservice.auth.infrastructure.jwt;
 
-import com.project.chatservice.auth.session.AuthSessionStore;
+import com.project.chatservice.auth.application.port.AuthSessionStore;
 import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import java.util.Collections;

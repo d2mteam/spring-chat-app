@@ -1,4 +1,4 @@
-package com.project.chatservice.auth.web.dto;
+package com.project.chatservice.auth.interfaces.web.dto;
 
 import java.time.Instant;
 

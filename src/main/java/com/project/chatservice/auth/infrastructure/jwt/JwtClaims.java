@@ -1,4 +1,4 @@
-package com.project.chatservice.auth.jwt;
+package com.project.chatservice.auth.infrastructure.jwt;
 
 import java.time.Instant;
 
