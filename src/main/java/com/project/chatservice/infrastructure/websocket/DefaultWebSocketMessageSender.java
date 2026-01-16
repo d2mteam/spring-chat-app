@@ -30,10 +30,13 @@ public class DefaultWebSocketMessageSender implements WebSocketMessageSender {
         }
         TextMessage textMessage = new TextMessage(payload);
         for (WebSocketSession session : sessionRegistry.getSubscribers(destination)) {
-            try {
-                session.sendMessage(textMessage);
-            } catch (IOException e) {
-                log.warn("Failed to send websocket message to session {}", session.getId(), e);
+            Object sendLock = sessionRegistry.getSendLock(session.getId()).orElse(session);
+            synchronized (sendLock) {
+                try {
+                    session.sendMessage(textMessage);
+                } catch (IOException e) {
+                    log.warn("Failed to send websocket message to session {}", session.getId(), e);
+                }
             }
         }
     }

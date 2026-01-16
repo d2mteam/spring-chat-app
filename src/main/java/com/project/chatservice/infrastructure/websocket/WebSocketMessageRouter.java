@@ -7,6 +7,7 @@ import com.project.chatservice.infrastructure.websocket.model.ClientMessageType;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -14,6 +15,7 @@ import org.springframework.web.socket.WebSocketSession;
  * Represents the web socket message router.
  */
 @Component
+@Slf4j
 public class WebSocketMessageRouter {
 
     private final ObjectMapper objectMapper;
@@ -26,9 +28,15 @@ public class WebSocketMessageRouter {
     }
 
     public void route(WebSocketSession session, ClientMessageEnvelope envelope) {
+        if (envelope == null || envelope.type() == null) {
+            log.debug("Ignoring websocket message with missing type from session {}", session.getId());
+            return;
+        }
         ClientMessageHandler handler = handlers.get(envelope.type());
         if (handler == null) {
-            throw new IllegalArgumentException("Unsupported message type: " + envelope.type());
+            log.debug("Ignoring websocket message with unsupported type {} from session {}", envelope.type(),
+                session.getId());
+            return;
         }
         Object payload = objectMapper.convertValue(envelope.payload(), handler.payloadType());
         if (payload == null) {

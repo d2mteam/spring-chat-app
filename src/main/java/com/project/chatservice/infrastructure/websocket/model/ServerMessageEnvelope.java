@@ -1,15 +1,13 @@
 package com.project.chatservice.infrastructure.websocket.model;
 
-import java.time.Instant;
-
 /**
  * Represents the server message envelope.
  */
 public record ServerMessageEnvelope(
-    String id,
+    int v,
     ServerMessageType type,
-    String destination,
-    Object payload,
-    Instant timestamp
+    String id,
+    long ts,
+    Object payload
 ) {
 }

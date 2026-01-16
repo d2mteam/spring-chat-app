@@ -53,14 +53,17 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private void sendError(WebSocketSession session, String code, String message) {
         WebSocketErrorResponse payload = new WebSocketErrorResponse(code, message, Instant.now());
         ServerMessageEnvelope envelope = new ServerMessageEnvelope(
-            UUID.randomUUID().toString(),
+            1,
             ServerMessageType.ERROR,
-            null,
-            payload,
-            Instant.now()
+            UUID.randomUUID().toString(),
+            Instant.now().toEpochMilli(),
+            payload
         );
         try {
-            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(envelope)));
+            Object sendLock = sessionRegistry.getSendLock(session.getId()).orElse(session);
+            synchronized (sendLock) {
+                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(envelope)));
+            }
         } catch (IOException ignored) {
             log.warn("Failed to send websocket error response to session {}", session.getId(), ignored);
         }

@@ -22,4 +22,6 @@ public interface SessionRegistry {
     void unsubscribe(String sessionId, String destination);
 
     Set<WebSocketSession> getSubscribers(String destination);
+
+    Optional<Object> getSendLock(String sessionId);
 }

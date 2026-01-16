@@ -17,18 +17,21 @@ public class InMemorySessionRegistry implements SessionRegistry {
     private final ConcurrentHashMap<String, String> userIds = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> destinationSubscriptions = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> sessionSubscriptions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Object> sendLocks = new ConcurrentHashMap<>();
 
     @Override
     public void register(WebSocketSession session, String userId) {
         sessions.put(session.getId(), session);
         userIds.put(session.getId(), userId);
         sessionSubscriptions.putIfAbsent(session.getId(), ConcurrentHashMap.newKeySet());
+        sendLocks.putIfAbsent(session.getId(), new Object());
     }
 
     @Override
     public void remove(String sessionId) {
         sessions.remove(sessionId);
         userIds.remove(sessionId);
+        sendLocks.remove(sessionId);
         Set<String> destinations = sessionSubscriptions.remove(sessionId);
         if (destinations != null) {
             destinations.forEach(destination -> {
@@ -87,5 +90,10 @@ public class InMemorySessionRegistry implements SessionRegistry {
             }
         });
         return result;
+    }
+
+    @Override
+    public Optional<Object> getSendLock(String sessionId) {
+        return Optional.ofNullable(sendLocks.get(sessionId));
     }
 }
