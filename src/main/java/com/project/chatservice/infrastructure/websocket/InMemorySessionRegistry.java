@@ -12,21 +12,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class InMemorySessionRegistry implements SessionRegistry {
 
-    private final ConcurrentHashMap<String, SessionConnection> sessions = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> userIds = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> destinationSubscriptions = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> sessionSubscriptions = new ConcurrentHashMap<>();
 
     @Override
-    public void register(SessionConnection connection, String userId) {
-        sessions.put(connection.id(), connection);
-        userIds.put(connection.id(), userId);
-        sessionSubscriptions.putIfAbsent(connection.id(), ConcurrentHashMap.newKeySet());
+    public void register(String sessionId, String userId) {
+        userIds.put(sessionId, userId);
+        sessionSubscriptions.putIfAbsent(sessionId, ConcurrentHashMap.newKeySet());
     }
 
     @Override
     public void remove(String sessionId) {
-        sessions.remove(sessionId);
         userIds.remove(sessionId);
         Set<String> destinations = sessionSubscriptions.remove(sessionId);
         if (destinations != null) {
@@ -40,11 +37,6 @@ public class InMemorySessionRegistry implements SessionRegistry {
                 }
             });
         }
-    }
-
-    @Override
-    public Optional<SessionConnection> getSession(String sessionId) {
-        return Optional.ofNullable(sessions.get(sessionId));
     }
 
     @Override
@@ -76,15 +68,7 @@ public class InMemorySessionRegistry implements SessionRegistry {
     }
 
     @Override
-    public Set<SessionConnection> getSubscribers(String destination) {
-        Set<String> sessionIds = destinationSubscriptions.getOrDefault(destination, Collections.emptySet());
-        Set<SessionConnection> result = ConcurrentHashMap.newKeySet();
-        sessionIds.forEach(id -> {
-            SessionConnection connection = sessions.get(id);
-            if (connection != null && connection.isOpen()) {
-                result.add(connection);
-            }
-        });
-        return result;
+    public Set<String> getSubscribers(String destination) {
+        return Set.copyOf(destinationSubscriptions.getOrDefault(destination, Collections.emptySet()));
     }
 }

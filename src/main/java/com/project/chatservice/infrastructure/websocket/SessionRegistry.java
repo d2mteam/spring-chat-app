@@ -8,11 +8,9 @@ import java.util.Set;
  */
 public interface SessionRegistry {
 
-    void register(SessionConnection connection, String userId);
+    void register(String sessionId, String userId);
 
     void remove(String sessionId);
-
-    Optional<SessionConnection> getSession(String sessionId);
 
     Optional<String> getUserId(String sessionId);
 
@@ -20,5 +18,5 @@ public interface SessionRegistry {
 
     void unsubscribe(String sessionId, String destination);
 
-    Set<SessionConnection> getSubscribers(String destination);
+    Set<String> getSubscribers(String destination);
 }

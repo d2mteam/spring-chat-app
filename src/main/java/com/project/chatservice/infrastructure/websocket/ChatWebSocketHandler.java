@@ -18,12 +18,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private final WebSocketMessageRouter messageRouter;
     private final SessionRegistry sessionRegistry;
+    private final SessionSender sessionSender;
     private final WebSocketUserResolver userResolver;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         String userId = userResolver.resolveUserId(session);
-        sessionRegistry.register(new WebSocketSessionConnection(session), userId);
+        sessionSender.register(session);
+        sessionRegistry.register(session.getId(), userId);
     }
 
     @Override
@@ -33,6 +35,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        sessionSender.remove(session.getId());
         sessionRegistry.remove(session.getId());
     }
 

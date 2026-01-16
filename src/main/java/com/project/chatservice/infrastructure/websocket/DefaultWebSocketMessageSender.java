@@ -15,6 +15,7 @@ public class DefaultWebSocketMessageSender implements WebSocketMessageSender {
 
     private final ObjectMapper objectMapper;
     private final SessionRegistry sessionRegistry;
+    private final SessionSender sessionSender;
 
     @Override
     public void send(String destination, ServerMessageEnvelope message) {
@@ -24,9 +25,7 @@ public class DefaultWebSocketMessageSender implements WebSocketMessageSender {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to serialize websocket message", e);
         }
-        for (SessionConnection connection : sessionRegistry.getSubscribers(destination)) {
-            connection.send(payload);
-        }
+        sessionSender.sendToSessions(sessionRegistry.getSubscribers(destination), payload);
     }
 
     @Override
@@ -37,6 +36,6 @@ public class DefaultWebSocketMessageSender implements WebSocketMessageSender {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to serialize websocket message", e);
         }
-        sessionRegistry.getSession(sessionId).ifPresent(connection -> connection.send(payload));
+        sessionSender.sendToSession(sessionId, payload);
     }
 }
