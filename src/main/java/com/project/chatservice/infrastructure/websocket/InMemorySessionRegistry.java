@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 /**
  * Represents the in memory session registry.
@@ -13,21 +12,18 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class InMemorySessionRegistry implements SessionRegistry {
 
-    private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> userIds = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> destinationSubscriptions = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> sessionSubscriptions = new ConcurrentHashMap<>();
 
     @Override
-    public void register(WebSocketSession session, String userId) {
-        sessions.put(session.getId(), session);
-        userIds.put(session.getId(), userId);
-        sessionSubscriptions.putIfAbsent(session.getId(), ConcurrentHashMap.newKeySet());
+    public void register(String sessionId, String userId) {
+        userIds.put(sessionId, userId);
+        sessionSubscriptions.putIfAbsent(sessionId, ConcurrentHashMap.newKeySet());
     }
 
     @Override
     public void remove(String sessionId) {
-        sessions.remove(sessionId);
         userIds.remove(sessionId);
         Set<String> destinations = sessionSubscriptions.remove(sessionId);
         if (destinations != null) {
@@ -41,11 +37,6 @@ public class InMemorySessionRegistry implements SessionRegistry {
                 }
             });
         }
-    }
-
-    @Override
-    public Optional<WebSocketSession> getSession(String sessionId) {
-        return Optional.ofNullable(sessions.get(sessionId));
     }
 
     @Override
@@ -77,15 +68,7 @@ public class InMemorySessionRegistry implements SessionRegistry {
     }
 
     @Override
-    public Set<WebSocketSession> getSubscribers(String destination) {
-        Set<String> sessionIds = destinationSubscriptions.getOrDefault(destination, Collections.emptySet());
-        Set<WebSocketSession> result = ConcurrentHashMap.newKeySet();
-        sessionIds.forEach(id -> {
-            WebSocketSession session = sessions.get(id);
-            if (session != null && session.isOpen()) {
-                result.add(session);
-            }
-        });
-        return result;
+    public Set<String> getSubscribers(String destination) {
+        return Set.copyOf(destinationSubscriptions.getOrDefault(destination, Collections.emptySet()));
     }
 }

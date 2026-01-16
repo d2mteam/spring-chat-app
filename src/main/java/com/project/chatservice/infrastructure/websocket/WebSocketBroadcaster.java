@@ -22,20 +22,20 @@ public class WebSocketBroadcaster {
 
     public void broadcastMessage(ChatMessageEvent event) {
         String destination = destinationResolver.roomMessages(event.roomId());
-        messageSender.send(destination, buildEnvelope(ServerMessageType.MESSAGE, destination, event));
+        messageSender.send(destination, buildEnvelope(ServerMessageType.CHAT_MESSAGE, event));
     }
 
     public void broadcastReceipt(ReceiptEvent event) {
         String destination = destinationResolver.roomReceipts(event.roomId());
-        messageSender.send(destination, buildEnvelope(ServerMessageType.RECEIPT, destination, event));
+        messageSender.send(destination, buildEnvelope(ServerMessageType.READ_RECEIPT, event));
     }
 
     public void broadcastNotification(NotificationEvent event) {
         String destination = destinationResolver.userNotifications(event.userId());
-        messageSender.send(destination, buildEnvelope(ServerMessageType.NOTIFICATION, destination, event));
+        messageSender.send(destination, buildEnvelope(ServerMessageType.NOTIFICATION, event));
     }
 
-    private ServerMessageEnvelope buildEnvelope(ServerMessageType type, String destination, Object payload) {
-        return new ServerMessageEnvelope(UUID.randomUUID().toString(), type, destination, payload, Instant.now());
+    private ServerMessageEnvelope buildEnvelope(ServerMessageType type, Object payload) {
+        return new ServerMessageEnvelope(1, type, UUID.randomUUID().toString(), Instant.now().toEpochMilli(), payload);
     }
 }
