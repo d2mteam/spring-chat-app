@@ -1,7 +1,12 @@
 package com.project.chatservice.security;
 
+import com.project.chatservice.auth.jwt.JwtClaims;
+import com.project.chatservice.auth.jwt.JwtService;
+import com.project.chatservice.auth.session.AuthSessionStore;
+import io.jsonwebtoken.JwtException;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -12,7 +17,11 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
  * Represents the jwt handshake interceptor.
  */
 @Component
+@RequiredArgsConstructor
 public class JwtHandshakeInterceptor implements HandshakeInterceptor {
+
+    private final JwtService jwtService;
+    private final AuthSessionStore sessionStore;
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request,
@@ -23,9 +32,16 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
         if (authHeaders != null && !authHeaders.isEmpty()) {
             String header = authHeaders.get(0);
             if (header.startsWith("Bearer ")) {
-                String userId = header.substring("Bearer ".length());
-                attributes.put("userId", userId);
-                return true;
+                String token = header.substring("Bearer ".length()).trim();
+                try {
+                    JwtClaims claims = jwtService.parseToken(token);
+                    if (sessionStore.isActive(claims.tokenId(), claims.userId())) {
+                        attributes.put("userId", claims.userId());
+                        return true;
+                    }
+                } catch (JwtException ex) {
+                    return true;
+                }
             }
         }
         List<String> userHeaders = request.getHeaders().get("X-User-Id");
