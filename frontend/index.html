@@ -19,26 +19,11 @@
       <div class="app__status" id="status">Sẵn sàng</div>
     </header>
 
-    <main class="app__main">
-      <section class="panel">
-        <div class="panel__header">
-          <h2>Phòng chat</h2>
-          <button id="refreshRooms" class="button button--ghost">Làm mới</button>
-        </div>
-        <form id="createRoomForm" class="stack">
-          <label class="field">
-            <span>Tạo phòng mới</span>
-            <input type="text" id="roomName" placeholder="Ví dụ: General" required />
-          </label>
-          <button type="submit" class="button">Tạo phòng</button>
-        </form>
-        <ul id="roomList" class="room-list"></ul>
-      </section>
-
+    <main class="app__main app__main--single">
       <section class="panel panel--messages">
         <div class="panel__header">
           <div>
-            <h2 id="roomTitle">Chọn phòng để xem tin nhắn</h2>
+            <h2 id="roomTitle">Phòng chat chung</h2>
             <p class="panel__subtitle">API: <code>/api/rooms/{roomId}/messages</code></p>
           </div>
           <div class="panel__actions">
@@ -47,9 +32,19 @@
           </div>
         </div>
         <div class="note">
-          Backend gửi tin nhắn mới qua WebSocket (<code>/app/rooms/{roomId}/send</code>),
-          nên frontend này chỉ hiển thị danh sách tin nhắn hiện tại.
+          Tất cả thành viên cùng tham gia một phòng chung. Tin nhắn mới được nhận trực tiếp
+          qua WebSocket (<code>/ws</code>) nên mọi người trong phòng đều thấy ngay.
         </div>
+        <form id="sendMessageForm" class="message-composer">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Nhập tin nhắn..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit" class="button">Gửi</button>
+        </form>
         <ul id="messageList" class="message-list"></ul>
       </section>
     </main>

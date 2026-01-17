@@ -22,12 +22,12 @@ public class WebSocketBroadcaster {
 
     public void broadcastMessage(ChatMessageEvent event) {
         String destination = destinationResolver.roomMessages(event.roomId());
-        messageSender.send(destination, buildEnvelope(ServerMessageType.CHAT_MESSAGE, event));
+        messageSender.send(destination, buildEnvelope(ServerMessageType.MESSAGE, event));
     }
 
     public void broadcastReceipt(ReceiptEvent event) {
         String destination = destinationResolver.roomReceipts(event.roomId());
-        messageSender.send(destination, buildEnvelope(ServerMessageType.READ_RECEIPT, event));
+        messageSender.send(destination, buildEnvelope(ServerMessageType.RECEIPT, event));
     }
 
     public void broadcastNotification(NotificationEvent event) {

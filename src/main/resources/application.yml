@@ -27,6 +27,14 @@ logging:
     com.project: DEBUG
 
 chat:
+  auth:
+    enforce: false
+    session-store: redis
+    session-key-prefix: 'chat:auth:session:'
+    jwt:
+      issuer: chat-service
+      secret: 'uA8W3T28pXYnCd6PQgQBCpEUcw01O++VLD2xR/UAf+g='
+      access-token-ttl: 2h
   websocket:
     endpoint: /ws
     allowed-origins:
