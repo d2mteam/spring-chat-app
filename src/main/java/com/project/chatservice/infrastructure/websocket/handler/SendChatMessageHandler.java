@@ -33,7 +33,7 @@ public class SendChatMessageHandler implements ClientMessageHandler {
         SendMessageRequest request = (SendMessageRequest) payload;
         payloadValidator.validate(request);
         String userId = context.userId();
-        messageService.saveAndPublish(
+        messageService.enqueueMessage(
             request.getRoomId(),
             userId,
             request.getContent(),

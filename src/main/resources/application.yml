@@ -54,3 +54,7 @@ chat:
       messages: chat:messages
       receipts: chat:receipts
       notifications: chat:notifications
+    queue:
+      message-queue-key: chat:messages:pending
+      batch-size: 50
+      poll-delay: 500ms
