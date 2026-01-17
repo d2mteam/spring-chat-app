@@ -9,6 +9,7 @@ import com.project.chatservice.chat.repository.RoomRepository;
 import com.project.chatservice.infrastructure.redis.RedisNotificationPublisher;
 import com.project.chatservice.infrastructure.redis.RedisPublisher;
 import com.project.chatservice.infrastructure.redis.RedisReceiptPublisher;
+import com.project.chatservice.infrastructure.redis.RedisMessageQueue;
 import java.time.Instant;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -34,28 +35,43 @@ public class MessageService {
     private final RedisPublisher redisPublisher;
     private final RedisReceiptPublisher receiptPublisher;
     private final RedisNotificationPublisher notificationPublisher;
+    private final RedisMessageQueue messageQueue;
 
     @Transactional
-    public ChatMessageEvent saveAndPublish(Long roomId,
-                                           String senderId,
-                                           String content,
-                                           Long parentId,
-                                           String contentType,
-                                           String attachmentUrl,
-                                           String attachmentName,
-                                           String attachmentMimeType) {
-        // Task 2 & 6: lưu message có thread và thông tin đính kèm.
-        ChatRoom room = roomRepository.findById(roomId)
-            .orElseThrow(() -> new IllegalArgumentException("Room not found"));
-        Message message = messageRepository.save(new Message(
-            room,
+    public void enqueueMessage(Long roomId,
+                               String senderId,
+                               String content,
+                               Long parentId,
+                               String contentType,
+                               String attachmentUrl,
+                               String attachmentName,
+                               String attachmentMimeType) {
+        messageQueue.enqueue(new PendingMessage(
+            roomId,
             senderId,
             content,
             parentId,
             contentType,
             attachmentUrl,
             attachmentName,
-            attachmentMimeType
+            attachmentMimeType,
+            Instant.now()
+        ));
+    }
+
+    @Transactional
+    public ChatMessageEvent persistQueuedMessage(PendingMessage pendingMessage) {
+        ChatRoom room = roomRepository.findById(pendingMessage.roomId())
+            .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+        Message message = messageRepository.save(new Message(
+            room,
+            pendingMessage.senderId(),
+            pendingMessage.content(),
+            pendingMessage.parentId(),
+            pendingMessage.contentType(),
+            pendingMessage.attachmentUrl(),
+            pendingMessage.attachmentName(),
+            pendingMessage.attachmentMimeType()
         ));
         ChatMessageEvent event = toEvent(message);
         redisPublisher.publish(event);

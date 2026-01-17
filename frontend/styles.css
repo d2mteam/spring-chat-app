@@ -59,6 +59,10 @@ body {
   margin-top: 28px;
 }
 
+.app__main--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .panel {
   background: #ffffff;
   border-radius: 18px;
@@ -92,26 +96,6 @@ body {
   gap: 10px;
 }
 
-.stack {
-  display: grid;
-  gap: 12px;
-}
-
-.field span {
-  display: block;
-  font-size: 13px;
-  color: #475569;
-  margin-bottom: 6px;
-}
-
-.field input {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  font-size: 14px;
-}
-
 .button {
   appearance: none;
   border: none;
@@ -133,7 +117,6 @@ body {
   opacity: 0.6;
 }
 
-.room-list,
 .message-list {
   list-style: none;
   padding: 0;
@@ -153,20 +136,6 @@ body {
 .message-list--slider li {
   flex: 0 0 min(320px, 80vw);
   scroll-snap-align: start;
-}
-
-.room-list li {
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: #f8fafc;
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-
-.room-list li.active {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  font-weight: 600;
 }
 
 .message-list li {
@@ -198,6 +167,21 @@ body {
   padding: 12px 14px;
   border-radius: 12px;
   font-size: 13px;
+}
+
+.message-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.message-composer input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
 }
 
 @media (max-width: 900px) {
