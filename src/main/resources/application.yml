@@ -27,6 +27,9 @@ logging:
     com.project: DEBUG
 
 chat:
+  security:
+    jwt:
+      secret: ${CHAT_JWT_SECRET:change-me}
   websocket:
     endpoint: /ws
     allowed-origins:
@@ -41,6 +44,9 @@ chat:
     ack:
       key-prefix: 'chat:ws:ack:'
       ttl: 5m
+    heartbeat:
+      ping-interval: 25s
+      pong-timeout: 60s
   redis:
     channels:
       messages: chat:messages
