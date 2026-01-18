@@ -51,6 +51,10 @@ public class WebSocketMessageRouter {
             log.debug("Ignoring websocket message with missing type from session {}", sessionId);
             return;
         }
+        if (!isAuthenticated(sessionId) && envelope.type() != ClientMessageType.AUTH) {
+            sendError(sessionId, "UNAUTHORIZED", "Authentication required");
+            return;
+        }
         ClientMessageHandler handler = handlers.get(envelope.type());
         if (handler == null) {
             log.debug("Ignoring websocket message with unsupported type {} from session {}", envelope.type(),
@@ -64,6 +68,10 @@ public class WebSocketMessageRouter {
         String userId = sessionRegistry.getUserId(sessionId).orElse(null);
         SessionContext context = new SessionContext(sessionId, userId);
         handler.handle(context, convertedPayload);
+    }
+
+    private boolean isAuthenticated(String sessionId) {
+        return sessionRegistry.getUserId(sessionId).isPresent();
     }
 
     private void sendError(String sessionId, String code, String message) {
