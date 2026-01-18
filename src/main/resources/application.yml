@@ -27,6 +27,9 @@ logging:
     com.project: DEBUG
 
 chat:
+  security:
+    jwt:
+      secret: ${CHAT_JWT_SECRET:change-me}
   websocket:
     endpoint: /ws
     allowed-origins:
