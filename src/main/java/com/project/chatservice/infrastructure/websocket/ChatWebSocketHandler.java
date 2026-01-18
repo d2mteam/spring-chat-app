@@ -1,5 +1,8 @@
 package com.project.chatservice.infrastructure.websocket;
 
+import com.project.chatservice.infrastructure.websocket.model.AuthResponse;
+import com.project.chatservice.infrastructure.websocket.model.ServerMessageEnvelope;
+import com.project.chatservice.infrastructure.websocket.model.ServerMessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -10,16 +13,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 /**
  * Represents the chat web socket handler.
- *
- * <p>Luồng chuẩn:
- * <ul>
- *   <li>HTTP Login: Client login, server trả JWT.</li>
- *   <li>WebSocket Connect (1 lần): Client mở WS + gửi JWT (handshake header/query hoặc AUTH message đầu tiên).
- *       Server verify JWT, OK thì đánh dấu connection đã auth + trả sessionId.</li>
- *   <li>Gửi tin nhắn (nhiều lần): Client gửi message bình thường không cần JWT. Server lấy user từ
- *       connection/session context.</li>
- *   <li>sessionId chỉ để tracking/debug/ack, không phải token xác thực.</li>
- * </ul>
  */
 @Component
 @RequiredArgsConstructor
@@ -30,12 +23,16 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final SessionRegistry sessionRegistry;
     private final SessionSender sessionSender;
     private final WebSocketUserResolver userResolver;
+    private final WebSocketMessageSender messageSender;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        String userId = userResolver.resolveUserId(session);
         sessionSender.register(session);
-        sessionRegistry.register(session.getId(), userId);
+        if (isAuthenticated(session)) {
+            String userId = userResolver.resolveUserId(session);
+            sessionRegistry.register(session.getId(), userId);
+            sendAuthSuccess(session.getId());
+        }
     }
 
     @Override
@@ -49,4 +46,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessionRegistry.remove(session.getId());
     }
 
+    private boolean isAuthenticated(WebSocketSession session) {
+        Object authenticated = session.getAttributes().get("authenticated");
+        return authenticated instanceof Boolean && (Boolean) authenticated;
+    }
+
+    private void sendAuthSuccess(String sessionId) {
+        AuthResponse payload = new AuthResponse(sessionId);
+        ServerMessageEnvelope envelope = new ServerMessageEnvelope(
+            1,
+            ServerMessageType.AUTH,
+            sessionId,
+            System.currentTimeMillis(),
+            payload
+        );
+        messageSender.sendToSession(sessionId, envelope);
+    }
 }
