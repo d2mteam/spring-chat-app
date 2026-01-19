@@ -14,7 +14,8 @@ public record WebSocketProperties(
     String anonymousUserId,
     String guestUserPrefix,
     DestinationProperties destinations,
-    AckProperties ack
+    AckProperties ack,
+    HeartbeatProperties heartbeat
 ) {
 
     public record DestinationProperties(
@@ -28,6 +29,12 @@ public record WebSocketProperties(
     public record AckProperties(
         String keyPrefix,
         Duration ttl
+    ) {
+    }
+
+    public record HeartbeatProperties(
+        Duration pingInterval,
+        Duration pongTimeout
     ) {
     }
 }

@@ -44,6 +44,9 @@ chat:
     ack:
       key-prefix: 'chat:ws:ack:'
       ttl: 5m
+    heartbeat:
+      ping-interval: 25s
+      pong-timeout: 60s
   redis:
     channels:
       messages: chat:messages
